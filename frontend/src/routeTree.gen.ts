@@ -10,11 +10,17 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TesteRouteImport } from './routes/teste'
+import { Route as FetchRouteImport } from './routes/fetch'
 import { Route as IndexRouteImport } from './routes/index'
 
 const TesteRoute = TesteRouteImport.update({
   id: '/teste',
   path: '/teste',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FetchRoute = FetchRouteImport.update({
+  id: '/fetch',
+  path: '/fetch',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -25,27 +31,31 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/fetch': typeof FetchRoute
   '/teste': typeof TesteRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/fetch': typeof FetchRoute
   '/teste': typeof TesteRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/fetch': typeof FetchRoute
   '/teste': typeof TesteRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/teste'
+  fullPaths: '/' | '/fetch' | '/teste'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/teste'
-  id: '__root__' | '/' | '/teste'
+  to: '/' | '/fetch' | '/teste'
+  id: '__root__' | '/' | '/fetch' | '/teste'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  FetchRoute: typeof FetchRoute
   TesteRoute: typeof TesteRoute
 }
 
@@ -56,6 +66,13 @@ declare module '@tanstack/react-router' {
       path: '/teste'
       fullPath: '/teste'
       preLoaderRoute: typeof TesteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/fetch': {
+      id: '/fetch'
+      path: '/fetch'
+      fullPath: '/fetch'
+      preLoaderRoute: typeof FetchRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -70,6 +87,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  FetchRoute: FetchRoute,
   TesteRoute: TesteRoute,
 }
 export const routeTree = rootRouteImport
