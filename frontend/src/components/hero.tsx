@@ -22,7 +22,7 @@ export default function Hero() {
           </h1>
 
           <p className="hero-body text-base leading-relaxed text-gray-500 max-w-sm">
-            Receive files straight from your own PC.
+            Receive files straight from your own PC. <br/>
             No third parties, no data caps, no compromise.<br/>
             100% private, end-to-end encrypted.
           </p>
@@ -46,7 +46,7 @@ export default function Hero() {
               className="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-medium rounded-md border border-gray-300 hover:bg-gray-50 transition-colors"
               style={{ color: "#374151" }}
             >
-              View on GitHub
+              Host your own
             </a>
           </div>
         </div>
