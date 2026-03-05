@@ -11,6 +11,7 @@ export default defineConfig({
     tailwindcss(),
   ],
   // proxy sends /api/ to localhost:8000 (fastapi backend)
+  // for development only, in production Caddy will handle this
   server: {
     proxy: {
       '/api': {
