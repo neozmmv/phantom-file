@@ -51,7 +51,7 @@ Lighthouse will spin up the frontend, backend, storage, and Tor hidden service.
 **Stop**
 
 ```bash
-docker compose down
+sudo docker compose down
 ```
 
 ## Project structure
