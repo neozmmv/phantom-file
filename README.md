@@ -61,3 +61,24 @@ lighthouse/
 ├── backend/      # Python API
 └── frontend/     # React app
 ```
+
+## For development
+For getting development dependencies:
+```bash
+sudo docker compose -f docker-compose.dev.yml up -d
+```
+Front-end:
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+Back-end:
+```bash
+cd backend/app
+python -m venv env
+source ./env/bin/activate
+pip install -r requirements.txt
+fastapi dev main.py --host 0.0.0.0
+```
