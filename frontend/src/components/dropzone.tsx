@@ -151,27 +151,37 @@ export default function Dropzone() {
       ctx = { file_id, upload_id };
       ctxRef.current = ctx;
 
-      // 2. Upload chunks
-      const parts: { part_number: number; etag: string }[] = [];
-      for (let i = 0; i < totalChunks; i++) {
-        const start = i * CHUNK_SIZE;
-        const chunk = file.slice(start, start + CHUNK_SIZE);
-        const { part_number, url } = urls[i];
+      // 2. Upload chunks (up to 5 in parallel)
+      const CONCURRENCY = 5;
+      const parts: { part_number: number; etag: string }[] = new Array(totalChunks);
+      let nextIndex = 0;
 
-        const etag = await uploadChunk(
-          url,
-          chunk,
-          (loaded) => {
-            chunkLoaded[i] = loaded;
-            updateProgress();
-          },
-          controller.signal
-        );
+      async function uploadWorker() {
+        while (nextIndex < totalChunks) {
+          const i = nextIndex++;
+          const start = i * CHUNK_SIZE;
+          const chunk = file!.slice(start, start + CHUNK_SIZE);
+          const { part_number, url } = urls[i];
 
-        chunkLoaded[i] = chunk.size;
-        updateProgress();
-        parts.push({ part_number, etag });
+          const etag = await uploadChunk(
+            url,
+            chunk,
+            (loaded) => {
+              chunkLoaded[i] = loaded;
+              updateProgress();
+            },
+            controller.signal
+          );
+
+          chunkLoaded[i] = chunk.size;
+          updateProgress();
+          parts[i] = { part_number, etag };
+        }
       }
+
+      await Promise.all(
+        Array.from({ length: Math.min(CONCURRENCY, totalChunks) }, uploadWorker)
+      );
 
       // 3. Finish
       setProgress(100);

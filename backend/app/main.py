@@ -27,8 +27,11 @@ _creds = dict(
 # internal client — used for all S3 operations
 s3 = boto3.client("s3", endpoint_url=os.getenv("MINIO_ENDPOINT", "http://minio:9000"), **_creds)
 
-# public client — used only for presigned URL generation; must use the same host clients will PUT to
+# public client — presigned upload URLs for Tor users; host must match where clients send PUTs
 s3_public = boto3.client("s3", endpoint_url=os.getenv("MINIO_PUBLIC_ENDPOINT", "http://localhost:9000"), **_creds)
+
+# local client — presigned download URLs for the host; always points to localhost:9000
+s3_local = boto3.client("s3", endpoint_url=os.getenv("MINIO_LOCAL_ENDPOINT", "http://localhost:9000"), **_creds)
 
 BUCKET = "lighthouse"
 
@@ -151,7 +154,7 @@ def download_file(file_id: str):
     try:
         meta = s3.head_object(Bucket=BUCKET, Key=file_id)
         filename = meta["Metadata"].get("filename", file_id)
-        url = s3_public.generate_presigned_url(
+        url = s3_local.generate_presigned_url(
             "get_object",
             Params={
                 "Bucket": BUCKET,
