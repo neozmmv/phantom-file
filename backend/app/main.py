@@ -136,6 +136,15 @@ def list_files():
     return result
 
 
+@app.delete("/api/files/{file_id:path}")
+def delete_file(file_id: str):
+    try:
+        s3.delete_object(Bucket=BUCKET, Key=file_id)
+    except ClientError as e:
+        raise HTTPException(status_code=500, detail=e.response["Error"]["Message"])
+    return {"status": "deleted"}
+
+
 @app.get("/api/files/{file_id:path}/download")
 def download_file(file_id: str):
     try:
