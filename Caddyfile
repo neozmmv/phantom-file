@@ -15,6 +15,14 @@
         reverse_proxy backend:8000
     }
 
+    # for dev, for prod must point to static vite files...
+    handle /files* {
+    @denied not remote_ip 127.0.0.1 ::1
+    respond @denied 403
+
+    reverse_proxy host.docker.internal:5173
+}
+
     handle {
         reverse_proxy host.docker.internal:5173
     }
