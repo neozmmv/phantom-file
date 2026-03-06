@@ -20,10 +20,10 @@
     @denied not remote_ip 127.0.0.1 ::1
     respond @denied 403
 
-    reverse_proxy host.docker.internal:5173
+    reverse_proxy frontend:5173
 }
 
     handle {
-        reverse_proxy host.docker.internal:5173
+        reverse_proxy frontend:5173
     }
 }

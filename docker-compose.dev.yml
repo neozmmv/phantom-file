@@ -24,9 +24,19 @@ services:
         condition: service_healthy
     restart: unless-stopped
 
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: lighthouse-frontend
+    networks:
+      - lighthouse
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules  # keep container's node_modules, don't overwrite with host
+    restart: unless-stopped
+
   caddy:
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
     image: caddy:alpine
     networks:
       - lighthouse
@@ -39,6 +49,7 @@ services:
       - caddy_config:/config
     depends_on:
       - backend
+      - frontend
     restart: unless-stopped
 
   minio:

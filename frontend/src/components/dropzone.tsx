@@ -139,7 +139,7 @@ export default function Dropzone() {
 
     try {
       // 1. Init
-      const initRes = await fetch("http://localhost:8000/api/upload/init", {
+      const initRes = await fetch("/api/upload/init", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ filename: file.name, total_chunks: totalChunks }),
@@ -174,7 +174,7 @@ export default function Dropzone() {
 
       // 3. Finish
       setProgress(100);
-      const finishRes = await fetch("http://localhost:8000/api/upload/finish", {
+      const finishRes = await fetch("/api/upload/finish", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ file_id, upload_id, parts }),
@@ -187,7 +187,7 @@ export default function Dropzone() {
       if (e instanceof DOMException && e.name === "AbortError") return;
 
       if (ctx) {
-        fetch("http://localhost:8000/api/upload/abort", {
+        fetch("/api/upload/abort", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ file_id: ctx.file_id, upload_id: ctx.upload_id }),
